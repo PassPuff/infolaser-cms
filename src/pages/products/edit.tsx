@@ -4,9 +4,7 @@ export const EditProduct = () => {
 	const { data, isLoading } = useOne({ resource: "products", id: "123" });
 	const { mutate, isLoading: isUpdating } = useUpdate();
 
-	if (isLoading) {
-		return <div>Loading...</div>;
-	}
+	if (isLoading) <div>Loading...</div>;
 
 	const upadatePrice = async () => {
 		await mutate({
