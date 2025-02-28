@@ -4,19 +4,23 @@ const API_URL = "https://api.fake-rest.refine.dev";
 
 export const dataProvider: DataProvider = {
 
-	getOne: async ({ resource, id }) => {
-		const response = await fetch(`${API_URL}/${resource}/${id}`);
+	create: async ({ resource, variables, /*meta*/ }) => {
+		const response = await fetch(`${API_URL}/${resource}`, {
+			method: "POST",
+			body: JSON.stringify(variables),
+			headers: {
+				"Content-Type": "application/json",
+			},
+		});
 
-		if (response.status < 200 || response.status > 299) {
-			throw new Error(response.statusText);
-		}
+		if (response.status < 200 || response.status > 299) throw response;
 
 		const data = await response.json();
 
 		return { data };
 	},
 
-	update: async ({ resource, id, variables }) => {
+	update: async ({ resource, id, variables, /*meta*/ }) => {
 		const response = await fetch(`${API_URL}/${resource}/${id}`, {
 			method: "PATCH",
 			body: JSON.stringify(variables),
@@ -25,21 +29,19 @@ export const dataProvider: DataProvider = {
 			},
 		});
 
-		if (response.status < 200 || response.status > 299) {
-			throw new Error(response.statusText);
-		}
+		if (response.status < 200 || response.status > 299) throw response;
 
 		const data = await response.json();
 
 		return { data };
 	},
 
-	getList: async ({ resource, pagination, sorters, filters, meta }) => {
+	getList: async ({ resource, pagination, sorters, filters, /*meta*/ }) => {
 		const params = new URLSearchParams();
 
-		if (pagination) {
-			params.append("_start", (pagination.current - 1) * pagination.pageSize);
-			params.append("_end", pagination.current * pagination.pageSize);
+		if (pagination && pagination.current !== undefined && pagination.pageSize !== undefined) {
+			params.append("_start", String((pagination.current - 1) * pagination.pageSize));
+			params.append("_end", String(pagination.current * pagination.pageSize));
 		}
 
 		if (sorters && sorters.length > 0) {
@@ -58,9 +60,7 @@ export const dataProvider: DataProvider = {
 
 		const response = await fetch(`${API_URL}/${resource}?${params.toString()}`);
 
-		if (response.status < 200 || response.status > 299) {
-			throw new Error(response.statusText);
-		}
+		if (response.status < 200 || response.status > 299) throw response;
 
 		const data = await response.json();
 
@@ -68,5 +68,15 @@ export const dataProvider: DataProvider = {
 			data,
 			total: 0
 		};
-	}
+	},
+
+	getOne: async ({ resource, id, /*meta*/ }) => {
+		const response = await fetch(`${API_URL}/${resource}/${id}`);
+
+		if (response.status < 200 || response.status > 299) throw response;
+
+		const data = await response.json();
+
+		return { data };
+	},
 };
