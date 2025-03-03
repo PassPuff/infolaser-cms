@@ -62,6 +62,7 @@ function App() {
 										meta: {
 											canDelete: true,
 											icon: <ShoppingCartOutlined />, // Иконка для продуктов
+											label: "Товары", // Отображаемый заголовок в меню
 										},
 									},
 									{
@@ -73,6 +74,8 @@ function App() {
 										meta: {
 											canDelete: true,
 											icon: <AppstoreOutlined />, // Иконка для категорий
+											label: "Категории", // Отображаемый заголовок в меню
+
 										},
 									},
 								]}

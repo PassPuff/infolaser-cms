@@ -18,6 +18,17 @@ export const ProductCreate = () => {
 				>
 					<Input />
 				</Form.Item>
+				<Form.Item
+					label={"Price"}
+					name={["price"]}
+					rules={[
+						{
+							required: true,
+						},
+					]}
+				>
+					<Input />
+				</Form.Item>
 			</Form>
 		</Create>
 	);
