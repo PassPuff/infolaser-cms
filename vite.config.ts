@@ -5,6 +5,7 @@ export default defineConfig({
 	plugins: [react()],
 	server: {
 		port: 4173,
-		host: true
+		host: true,
+		allowedHosts: ["infolaser-infolasercms-edhcd0-feaa7c-46-101-244-239.traefik.me"]
 	}
 });
