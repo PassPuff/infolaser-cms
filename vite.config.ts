@@ -6,6 +6,6 @@ export default defineConfig({
 	server: {
 		port: 4173,
 		host: true,
-		allowedHosts: ["infolaser-infolasercms-edhcd0-feaa7c-46-101-244-239.traefik.me"]
+		allowedHosts: ["cms.infolasers.ru"]
 	}
 });
