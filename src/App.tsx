@@ -21,7 +21,7 @@ import { App as AntdApp } from "antd";
 import { BrowserRouter, Outlet, Route, Routes } from "react-router";
 import { authProvider } from "./authProvider";
 import { AppIcon } from "./components/app-icon";
-import { ShoppingCartOutlined, AppstoreOutlined } from "@ant-design/icons";
+import { ShoppingCartOutlined, AppstoreOutlined, DashboardOutlined } from "@ant-design/icons";
 import { Header } from "./components/header";
 import { ColorModeContextProvider } from "./contexts/color-mode";
 import {
@@ -39,6 +39,7 @@ import {
 import { ForgotPassword } from "./pages/forgotPassword";
 import { Login } from "./pages/login";
 import { Register } from "./pages/register";
+import { Dashboard } from "./pages/dashboard";
 
 function App() {
 	return (
@@ -53,6 +54,14 @@ function App() {
 								authProvider={authProvider}
 								routerProvider={routerBindings}
 								resources={[
+									{
+										name: "dashboard",
+										list: "/",
+										meta: {
+											icon: <DashboardOutlined />,
+											label: "Панель управления",
+										},
+									},
 									{
 										name: "Products",
 										list: "/products",
@@ -103,7 +112,7 @@ function App() {
 											</Authenticated>
 										}
 									>
-
+										<Route path="/" element={<Dashboard />} />
 										<Route path="/products">
 											<Route index element={<ProductsList />} />
 											<Route path="create" element={<ProductCreate />} />
