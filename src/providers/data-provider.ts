@@ -1,11 +1,40 @@
 import type { DataProvider } from "@refinedev/core";
 
-const API_URL = "https://api.fake-rest.refine.dev";
+const API_URL = "https://api.infolasers.ru/api";
+
+// Обёртка над fetch для добавления заголовка Authorization
+const fetchWithAuth = async (url: string, options: RequestInit = {}) => {
+	const token = localStorage.getItem("my_access_token");
+	const headers = new Headers(options.headers || {});
+
+	if (token) {
+		headers.set("Authorization", `Bearer ${token}`);
+	}
+
+	return fetch(url, { ...options, headers });
+};
+
 
 export const dataProvider: DataProvider = {
 
+	getMany: async ({ resource, ids, meta }) => {
+		const params = new URLSearchParams();
+
+		if (ids) {
+			ids.forEach((id) => params.append("id", id));
+		}
+
+		const response = await fetch(`${API_URL}/${resource}?${params.toString()}`);
+
+		if (response.status < 200 || response.status > 299) throw response;
+
+		const data = await response.json();
+
+		return { data };
+	},
+
 	create: async ({ resource, variables, /*meta*/ }) => {
-		const response = await fetch(`${API_URL}/${resource}`, {
+		const response = await fetchWithAuth(`${API_URL}/${resource}`, {
 			method: "POST",
 			body: JSON.stringify(variables),
 			headers: {
@@ -21,7 +50,7 @@ export const dataProvider: DataProvider = {
 	},
 
 	update: async ({ resource, id, variables, /*meta*/ }) => {
-		const response = await fetch(`${API_URL}/${resource}/${id}`, {
+		const response = await fetchWithAuth(`${API_URL}/${resource}/${id}`, {
 			method: "PATCH",
 			body: JSON.stringify(variables),
 			headers: {
@@ -36,42 +65,24 @@ export const dataProvider: DataProvider = {
 		return { data };
 	},
 
-	getList: async ({ resource, pagination, sorters, filters, /*meta*/ }) => {
-		const params = new URLSearchParams();
+	getList: async ({ resource/*meta*/ }) => {
 
-		if (pagination && pagination.current !== undefined && pagination.pageSize !== undefined) {
-			params.append("_start", String((pagination.current - 1) * pagination.pageSize));
-			params.append("_end", String(pagination.current * pagination.pageSize));
-		}
-
-		if (sorters && sorters.length > 0) {
-			params.append("_sort", sorters.map((sorter) => sorter.field).join(","));
-			params.append("_order", sorters.map((sorter) => sorter.order).join(","));
-		}
-
-		if (filters && filters.length > 0) {
-			filters.forEach((filter) => {
-				if ("field" in filter && filter.operator === "eq") {
-					// Our fake API supports "eq" operator by simply appending the field name and value to the query string.
-					params.append(filter.field, filter.value);
-				}
-			});
-		}
-
-		const response = await fetch(`${API_URL}/${resource}?${params.toString()}`);
+		const response = await fetchWithAuth(`${API_URL}/${resource}`);
 
 		if (response.status < 200 || response.status > 299) throw response;
 
 		const data = await response.json();
 
+		// console.log(data);
+
+
 		return {
 			data,
-			total: 0
 		};
 	},
 
 	getOne: async ({ resource, id, /*meta*/ }) => {
-		const response = await fetch(`${API_URL}/${resource}/${id}`);
+		const response = await fetchWithAuth(`${API_URL} / ${resource} / ${id}`);
 
 		if (response.status < 200 || response.status > 299) throw response;
 
