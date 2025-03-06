@@ -6,11 +6,11 @@ export const ListProducts = () => {
 	const {
 		tableQuery: { data, isLoading } } = useTable({
 			resource: 'products',
+			pagination: { current: 1, pageSize: 5 }
 		});
 
 
-	if (isLoading) <div><h1>Loading</h1></div>;
-
+	if (isLoading) return <h1>Loading...</h1>;
 
 	return (
 		<div>
@@ -25,7 +25,7 @@ export const ListProducts = () => {
 					</tr>
 				</thead>
 				<tbody>
-					{data?.data?.data?.list.map((product) => (
+					{data?.data?.list.map((product) => (
 						<tr key={product.id}>
 							<td>{product.id}</td>
 							<td>{product.name}</td>

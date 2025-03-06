@@ -1,17 +1,18 @@
 import { useOne } from "@refinedev/core"
 
 export const ShowProduct = () => {
-	const { data, isLoading } = useOne({ resource: "products", id: "123" });
+	const { data, isLoading } = useOne({ resource: 'products', id: "12" });
 
-	if (isLoading) <div>Loading...</div>;
+	if (isLoading) return <h1>Loading...</h1>;
 
+	const result = data?.data?.Product;
 
 	return (
 		<div>
-			<h1>Product name</h1>
-			<h2>{data?.data.name}</h2>
-			<p>{data?.data.description}</p>
-			<p>{data?.data.price}</p>
+			<h1> {result.id} - {result.name}</h1>
+			<p>{result.description}</p>
+			<p>{result.orderPrice} Price</p>
+			<p>{result.rating} Raiting</p>
 		</div>
 	);
 }

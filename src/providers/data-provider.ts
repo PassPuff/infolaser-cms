@@ -1,6 +1,7 @@
 import type { DataProvider } from "@refinedev/core";
 
 const API_URL = "https://api.infolasers.ru/api";
+// const API_URL = "https://api.fake-rest.refine.dev";
 
 // Обёртка над fetch для добавления заголовка Authorization
 const fetchWithAuth = async (url: string, options: RequestInit = {}) => {
@@ -60,33 +61,42 @@ export const dataProvider: DataProvider = {
 
 		if (response.status < 200 || response.status > 299) throw response;
 
-		const data = await response.json();
+		const { data } = await response.json();
 
 		return { data };
 	},
 
-	getList: async ({ resource/*meta*/ }) => {
+	getList: async ({ resource, pagination }) => {
+		const params = new URLSearchParams();
 
-		const response = await fetchWithAuth(`${API_URL}/${resource}`);
+		if (pagination) {
+			params.append("page", pagination.current.toString()); // Используем API параметр page
+			params.append("limit", pagination.pageSize.toString()); // Используем API параметр limit
+		}
 
-		if (response.status < 200 || response.status > 299) throw response;
+		const response = await fetchWithAuth(`${API_URL}/${resource}?${params.toString()}`);
 
-		const data = await response.json();
+		console.log(response);
+		if (!response.ok) throw response;
 
-		// console.log(data);
+		const { data } = await response.json();
 
+
+		// console.log(pagination);
 
 		return {
-			data,
+			data: data, // API возвращает массив продуктов внутри data.list
+			total: data.pagination.total, // Общее количество записей из API
 		};
 	},
 
-	getOne: async ({ resource, id, /*meta*/ }) => {
-		const response = await fetchWithAuth(`${API_URL} / ${resource} / ${id}`);
+
+	getOne: async ({ resource, id, meta }) => {
+		const response = await fetchWithAuth(`${API_URL}/${resource}/${id}`);
 
 		if (response.status < 200 || response.status > 299) throw response;
 
-		const data = await response.json();
+		const { data } = await response.json();
 
 		return { data };
 	},
