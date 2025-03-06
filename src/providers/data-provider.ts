@@ -45,7 +45,7 @@ export const dataProvider: DataProvider = {
 
 		if (response.status < 200 || response.status > 299) throw response;
 
-		const data = await response.json();
+		const { data } = await response.json();
 
 		return { data };
 	},
@@ -76,7 +76,6 @@ export const dataProvider: DataProvider = {
 
 		const response = await fetchWithAuth(`${API_URL}/${resource}?${params.toString()}`);
 
-		console.log(response);
 		if (!response.ok) throw response;
 
 		const { data } = await response.json();

@@ -22,8 +22,8 @@ function App(): JSX.Element {
 				<Header />
 				{/* <ShowProduct /> */}
 				{/* <EditProduct /> */}
-				{/* <CreateProduct /> */}
-				<ListProducts />
+				<CreateProduct />
+				{/* <ListProducts /> */}
 			</Authenticated>
 		</Refine >
 	);
