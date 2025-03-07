@@ -21,8 +21,8 @@ function App(): JSX.Element {
 			<Authenticated key="protected" fallback={<Login />}>
 				<Header />
 				{/* <ShowProduct /> */}
-				{/* <EditProduct /> */}
-				<CreateProduct />
+				<EditProduct />
+				{/* <CreateProduct /> */}
 				{/* <ListProducts /> */}
 			</Authenticated>
 		</Refine >

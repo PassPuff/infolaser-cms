@@ -2,7 +2,7 @@ import { AuthProvider } from "@refinedev/core";
 
 export const authProvider: AuthProvider = {
 	logout: async () => {
-		localStorage.removeItem("my_access_token");
+		localStorage.removeItem("refine-auth");
 		// We're returning success: true to indicate that the logout operation was successful.
 		return { success: true };
 	},
@@ -23,14 +23,14 @@ export const authProvider: AuthProvider = {
 
 
 		if (data.success) {
-			localStorage.setItem("my_access_token", data.data.token);
+			localStorage.setItem("refine-auth", data.data.token);
 			return { success: true };
 		}
 
 		return { success: false };
 	},
 	check: async () => {
-		const token = localStorage.getItem("my_access_token");
+		const token = localStorage.getItem("refine-auth");
 
 		return { authenticated: Boolean(token) };
 	},

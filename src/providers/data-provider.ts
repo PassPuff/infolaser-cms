@@ -5,7 +5,7 @@ const API_URL = "https://api.infolasers.ru/api";
 
 // Обёртка над fetch для добавления заголовка Authorization
 const fetchWithAuth = async (url: string, options: RequestInit = {}) => {
-	const token = localStorage.getItem("my_access_token");
+	const token = localStorage.getItem("refine-auth");
 	const headers = new Headers(options.headers || {});
 
 	if (token) {
@@ -78,14 +78,11 @@ export const dataProvider: DataProvider = {
 
 		if (!response.ok) throw response;
 
-		const { data } = await response.json();
-
-
-		// console.log(pagination);
+		const json = await response.json();
 
 		return {
-			data: data, // API возвращает массив продуктов внутри data.list
-			total: data.pagination.total, // Общее количество записей из API
+			data: json.data.list, // API возвращает массив продуктов внутри data.list
+			// total: data.pagination.total, // Общее количество записей из API
 		};
 	},
 
