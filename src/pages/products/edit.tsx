@@ -11,8 +11,9 @@ export const EditProduct = () => {
 
   const { options } = useSelect({
     resource: "category",
+    optionLabel: "name", // Указываем, какое поле использовать как label
+    optionValue: "id", // Указываем, какое поле использовать как value
   });
-
   const onSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = Object.fromEntries(
@@ -187,14 +188,16 @@ export const EditProduct = () => {
 
         <div>
           <label htmlFor="categories">Category</label>
-          <select id="categories" name="categories">
+          <select
+            id="categories"
+            name="categories"
+            defaultValue={
+              record?.categories?.length > 0 ? record.categories[0].id : ""
+            }
+          >
             {options.map((option) => (
-              <option
-                key={option.value}
-                value={option.value}
-                selected={record?.categories[0].id == option.value}
-              >
-                {option.value}
+              <option key={option.value} value={option.value}>
+                {option.label}
               </option>
             ))}
           </select>
