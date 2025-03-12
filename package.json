@@ -14,9 +14,14 @@
     "@refinedev/cli": "^2.16.44",
     "@refinedev/core": "^4.57.7",
     "@tailwindcss/vite": "^4.0.13",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
+    "lucide-react": "^0.479.0",
     "react": "^18.0.0",
     "react-dom": "^18.0.0",
-    "tailwindcss": "^4.0.13"
+    "tailwind-merge": "^3.0.2",
+    "tailwindcss": "^4.0.13",
+    "tailwindcss-animate": "^1.0.7"
   },
   "devDependencies": {
     "@types/react": "^18.0.0",
