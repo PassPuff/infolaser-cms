@@ -1,110 +1,159 @@
-import { useTable, /*useMany*/ } from '@refinedev/core';
+import { useTable /*useMany*/ } from "@refinedev/core";
 import { Category, Product } from "../../types/interface";
 import { Button } from "@/components/ui/button";
 
+export const ListProducts: React.FC = () => {
+  const {
+    tableQuery: { data, isLoading },
+    current,
+    setCurrent,
+    pageCount,
+    sorters,
+    setSorters,
+  } = useTable({
+    resource: "products",
+    pagination: { current: 1, pageSize: 10, mode: "server" },
+    sorters: { initial: [{ field: "id", order: "asc" }] },
+  });
 
-export const ListProducts = () => {
+  if (isLoading) return <h1>Loading...</h1>;
 
+  const onPrevious = () => {
+    if (current > 1) {
+      setCurrent(current - 1);
+    }
+  };
 
-	const {
-		tableQuery: { data, isLoading },
-		current,
-		setCurrent,
-		pageCount,
-		sorters,
-		setSorters,
-		} = useTable({
-			resource: 'products',
-			pagination: { current: 1, pageSize: 4 },
-			sorters: {initial: [{ field: 'id', order: 'asc' }]}
-		});
+  const onNext = () => {
+    if (current < pageCount) {
+      setCurrent(current + 1);
+    }
+  };
 
-	if (isLoading) return <h1>Loading...</h1>;
+  const onPage = (page: number) => {
+    setCurrent(page);
+  };
 
-	const onPrevious = () => {
-		if (current > 1) {
-			setCurrent(current - 1);
-		}
-	};
+  const getSortOrder = (field: string) => {
+    return sorters?.find((sorter) => sorter.field === field)?.order;
+  };
 
-	const onNext = () => {
-		if (current < pageCount) {
-			setCurrent(current + 1);
-		}
-	};
+  const onSort = (field: string) => {
+    const currentOrder = getSortOrder(field);
+    setSorters([
+      {
+        field,
+        order: currentOrder === "asc" ? "desc" : "asc",
+      },
+    ]);
+  };
 
-	const onPage = (page: number) => {
-		setCurrent(page);
-	};
+  const findSorterByFieldName = (fieldName: string) => {
+    return sorters.find((sorter) => sorter.field === fieldName);
+  };
 
-	const getSorter = (field: string) => {
-		const sorter = sorters?.find((sorter) => sorter.field === field);
-
-		if (sorter) {
-			return sorter.order;
-		}
-	}
-
-	// We'll use this function to toggle the sorters when the user clicks on the table headers.
-	const onSort = (field: string) => {
-		const sorter = getSorter(field);
-		setSorters(
-			sorter === "desc" ? [] : [
-				{
-					field,
-					order: sorter === "asc" ? "desc" : "asc",
-				},
-			]
-		);
-	}
-
-	// We'll use this object to display visual indicators for the sorters.
-	const indicator = { asc: "⬆️", desc: "⬇️" };
-
-	return (
-		<div>
-			<h1 className="text-2xl py-10 text-cyan-800 font-bold">Products LIST</h1>
-
-			<table>
-				<thead>
-					<tr className="border-2 p-2">
-						<th onClick={() => onSort("id")}>ID {indicator[getSorter("id")]}</th>
-						<th>Name</th>
-						<th>Description</th>
-						<th>Category</th>
-						<th>Price</th>
-					</tr>
-				</thead>
-				<tbody>
-					{data?.data?.map((product) => (
-						<tr  className="border-2 p-2" key={product.id}>
-							<td>{product.id}</td>
-							<td>{product.name}</td>
-							<td>{product.description}</td>
-							<td>
-							{product.categories.map((category: Category ) =>
-								<div key={category.id}>{category.name}</div>
-							)}
-							</td>
-							<td>{product.orderPrice}</td>
-						</tr>
-					))}
-				</tbody>
-			</table>
-
-			<h3>page current: {current}</h3>
-
-			<div className="flex gap-5 mt-5">
-				<Button type="button" onClick={onPrevious}>
-					{current - 1 > 0 && <span onClick={() => onPage(current - 1)}>{"< "}{current - 1}</span>}
-				</Button>
-				<div>
-					<span>{current}</span>
-				</div>
-				<Button type="button" onClick={onNext}>
-					{current + 1 < pageCount && <span onClick={() => onPage(current + 1)}>{current + 1} {">"}</span>}
-				</Button>
-			</div>
-		</div>
-	);
-}
+  return (
+    <div>
+      <h1 className="text-2xl py-10 text-cyan-800 font-bold">Products LIST</h1>
+      <table className="w-full">
+        <thead>
+          <tr className="border-2 p-2">
+            <th
+              className="cursor-pointer hover:bg-gray-100"
+              onClick={() => onSort("id")}
+            >
+              ID{" "}
+              {getSortOrder("id") === "asc"
+                ? "↑"
+                : getSortOrder("id") === "desc"
+                ? "↓"
+                : ""}
+            </th>
+            <th
+              className="cursor-pointer hover:bg-gray-100"
+              onClick={() => onSort("name")}
+            >
+              Name{" "}
+              {getSortOrder("name") === "asc"
+                ? "↑"
+                : getSortOrder("name") === "desc"
+                ? "↓"
+                : ""}
+            </th>
+            <th>Description</th>
+            <th>Category</th>
+            <th
+              className="cursor-pointer hover:bg-gray-100 p-2"
+              onClick={() => onSort("orderPrice")}
+            >
+              Price{" "}
+              {getSortOrder("orderPrice") === "asc"
+                ? "↑"
+                : getSortOrder("orderPrice") === "desc"
+                ? "↓"
+                : ""}
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          {data?.data?.map((product) => (
+            <tr className="border-2 p-2" key={product.id}>
+              <td className="text-center">{product.id}</td>
+              <td>{product.name}</td>
+              <td>{product.description}</td>
+              <td>
+                {product.categories.map((category: Category) => (
+                  <div key={category.id}>{category.name}</div>
+                ))}
+              </td>
+              <td className="text-right">{product.orderPrice}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+      <hr />
+      Sorting by field:
+      <b>
+        {findSorterByFieldName("price")?.field}, order{" "}
+        {findSorterByFieldName("price")?.order}
+      </b>
+      <br />
+      <Button
+        onClick={() => {
+          setSorters([
+            {
+              field: "price",
+              order:
+                findSorterByFieldName("price")?.order === "asc"
+                  ? "desc"
+                  : "asc",
+            },
+          ]);
+        }}
+      >
+        Toggle Sort
+      </Button>
+      <div className="flex gap-5 mt-5 items-center justify-center">
+        <Button type="button" onClick={onPrevious} disabled={current <= 1}>
+          Предыдущая
+        </Button>
+        <div className="flex gap-2">
+          {current > 1 && (
+            <Button variant="outline" onClick={() => onPage(current - 1)}>
+              {current - 1}
+            </Button>
+          )}
+          <Button variant="secondary">{current}</Button>
+          {current < pageCount && (
+            <Button variant="outline" onClick={() => onPage(current + 1)}>
+              {current + 1}
+            </Button>
+          )}
+        </div>
+        <Button type="button" onClick={onNext} disabled={current >= pageCount}>
+          Следующая
+        </Button>
+      </div>
+    </div>
+  );
+};
