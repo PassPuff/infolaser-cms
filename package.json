@@ -11,6 +11,7 @@
     "start": "refine start"
   },
   "dependencies": {
+    "@radix-ui/react-slot": "^1.1.2",
     "@refinedev/cli": "^2.16.44",
     "@refinedev/core": "^4.57.7",
     "@tailwindcss/vite": "^4.0.13",

@@ -24,6 +24,7 @@ export const authProvider: AuthProvider = {
 
 		if (data.success) {
 			localStorage.setItem("refine-auth", data.data.token);
+			window.location.reload(); // Перезагрузка страницы
 			return { success: true };
 		}
 

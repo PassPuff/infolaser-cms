@@ -1,5 +1,7 @@
 import React from "react";
 import { useLogin } from "@refinedev/core";
+import { Button } from "../components/ui/button";
+
 
 export const Login = () => {
 	const { mutate, isLoading } = useLogin();
@@ -35,9 +37,9 @@ export const Login = () => {
 				/>
 
 				{isLoading && <span>loading...</span>}
-				<button type="submit" disabled={isLoading}>
+				<Button type="submit" disabled={isLoading}>
 					Submit
-				</button>
+				</Button>
 			</form>
 		</div>
 	);
