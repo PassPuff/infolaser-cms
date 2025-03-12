@@ -7,7 +7,7 @@ export const Header = () => {
 
   return (
     <header className="flex items-center justify-between max-w-3xl">
-      <h2>Welcome!</h2>
+      <h2 className="text-2xl font-bold">Welcome! Infolaser CMS</h2>
       <Button
         type="button"
         variant="destructive"

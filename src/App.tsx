@@ -19,7 +19,7 @@ function App(): JSX.Element {
         {/* <ShowProduct /> */}
         {/*<EditProduct />*/}
         {/* <CreateProduct /> */}
-         <ListProducts />
+        <ListProducts />
       </Authenticated>
     </Refine>
   );

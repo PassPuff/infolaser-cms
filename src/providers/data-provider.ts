@@ -66,12 +66,19 @@ export const dataProvider: DataProvider = {
 		return { data };
 	},
 
-	getList: async ({ resource, pagination }) => {
+	getList: async ({ resource, pagination, sorters, filters, meta }) => {
 		const params = new URLSearchParams();
 
 		if (pagination) {
 			params.append("page", pagination.current.toString()); // Используем API параметр page
 			params.append("limit", pagination.pageSize.toString()); // Используем API параметр limit
+		}
+
+		if (sorters && sorters.length > 0) {
+
+			console.log(sorters)
+			params.append("_sort", sorters.map((sorter) => sorter.field).join(","));
+			params.append("_order", sorters.map((sorter) => sorter.order).join(","));
 		}
 
 		const response = await fetchWithAuth(`${API_URL}/${resource}?${params.toString()}`);
@@ -80,9 +87,11 @@ export const dataProvider: DataProvider = {
 
 		const json = await response.json();
 
+		const total = json.data.pagination.total;
+
 		return {
 			data: json.data.list, // API возвращает массив продуктов внутри data.list
-			// total: data.pagination.total, // Общее количество записей из API
+			total
 		};
 	},
 
