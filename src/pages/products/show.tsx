@@ -1,15 +1,18 @@
-import { useOne } from "@refinedev/core";
+import { useShow, useOne } from "@refinedev/core";
 import { Product } from "src/types/interface";
 
 export const ShowProduct: React.FC = () => {
-  const { data, isLoading } = useOne({
-    resource: "products",
-    id: "12",
-  });
+  // const { data, isLoading } = useOne({
+  //   resource: "products",
+  //   id: "12",
+  // });
 
-  if (isLoading) return <h1>Loading...</h1>;
+  const { query } = useShow();
 
-  const oneProduct = data?.data.product as Product;
+
+  if (query.isLoading) return <h1>Loading...</h1>;
+
+  const oneProduct = query.data?.data.product as Product;
 
   return (
     <div>

@@ -1,6 +1,7 @@
-import { useTable /*useMany*/ } from "@refinedev/core";
+import { useTable ,useMany, useNavigation } from "@refinedev/core";
 import { Category, Product } from "../../types/interface";
 import { Button } from "@/components/ui/button";
+
 
 export const ListProducts: React.FC = () => {
   const {
@@ -11,10 +12,14 @@ export const ListProducts: React.FC = () => {
     sorters,
     setSorters,
   } = useTable({
-    resource: "products",
+    // resource: "products",
     pagination: { current: 1, pageSize: 10, mode: "server" },
     sorters: { initial: [{ field: "id", order: "asc" }] },
   });
+
+  // You can also use methods like show or list to trigger navigation.
+  // We're using url methods to provide more semantically correct html.
+  const { show, edit } = useNavigation();
 
   if (isLoading) return <h1>Loading...</h1>;
 
@@ -93,10 +98,11 @@ export const ListProducts: React.FC = () => {
                 ? "↓"
                 : ""}
             </th>
+            <th>Actions</th>
           </tr>
         </thead>
         <tbody>
-          {data?.data?.map((product) => (
+          {data?.data?.map((product)  => (
             <tr className="border-2 p-2" key={product.id}>
               <td className="text-center">{product.id}</td>
               <td>{product.name}</td>
@@ -107,6 +113,11 @@ export const ListProducts: React.FC = () => {
                 ))}
               </td>
               <td className="text-right">{product.orderPrice}</td>
+              <td className="flex gap-2 px-10">
+                <Button variant="secondary" onClick={() => show("products", product.id)}>Show</Button>
+
+                <Button variant="secondary" onClick={() => edit("products", product.id)}>Edit</Button>
+              </td>
             </tr>
           ))}
         </tbody>
@@ -114,7 +125,7 @@ export const ListProducts: React.FC = () => {
       <hr />
       Sorting by field:
       <b>
-        {findSorterByFieldName("price")?.field}, order{" "}
+        {findSorterByFieldName("price")?.field},  order{" "}
         {findSorterByFieldName("price")?.order}
       </b>
       <br />

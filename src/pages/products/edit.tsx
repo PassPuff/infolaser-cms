@@ -1,13 +1,14 @@
 import { useForm, useSelect } from "@refinedev/core";
+import { Product } from "../../types/interface";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+
+
 
 export const EditProduct = () => {
-  const { onFinish, mutation, query } = useForm({
-    action: "edit",
-    resource: "products",
-    id: "16",
-  });
+  const { onFinish, mutation, query } = useForm();
 
-  const record = query.data?.data.product;
+  const record = query.data?.data.product as Product;
 
   const { options } = useSelect({
     resource: "category",
@@ -41,7 +42,7 @@ export const EditProduct = () => {
       <form onSubmit={onSubmit}>
         <div>
           <label htmlFor="name">Name</label>
-          <input
+          <Input
             type="text"
             id="name"
             name="name"
@@ -51,7 +52,7 @@ export const EditProduct = () => {
 
         <div>
           <label htmlFor="slug">Slug</label>
-          <input
+          <Input
             type="text"
             id="slug"
             name="slug"
@@ -61,7 +62,7 @@ export const EditProduct = () => {
 
         <div>
           <label htmlFor="description">Description</label>
-          <textarea
+          <Input
             id="description"
             name="description"
             defaultValue={record?.description}
@@ -70,7 +71,7 @@ export const EditProduct = () => {
 
         <div>
           <label htmlFor="orderPrice">Order Price</label>
-          <input
+          <Input
             type="number"
             id="orderPrice"
             name="orderPrice"
@@ -80,7 +81,7 @@ export const EditProduct = () => {
 
         <div>
           <label htmlFor="stockPrice">Stock Price</label>
-          <input
+          <Input
             type="number"
             id="stockPrice"
             name="stockPrice"
@@ -90,7 +91,7 @@ export const EditProduct = () => {
 
         <div>
           <label htmlFor="newPrice">New Price</label>
-          <input
+          <Input
             type="number"
             id="newPrice"
             name="newPrice"
@@ -100,7 +101,7 @@ export const EditProduct = () => {
 
         <div>
           <label htmlFor="inStock">In Stock (1 - да, 0 - нет)</label>
-          <input
+          <Input
             type="number"
             id="inStock"
             name="inStock"
@@ -110,21 +111,21 @@ export const EditProduct = () => {
           />
         </div>
 
-        <div>
-          <label htmlFor="isAccessory">Is Accessory (1 - да, 0 - нет)</label>
-          <input
-            type="number"
-            id="isAccessory"
-            name="isAccessory"
-            min="0"
-            max="1"
-            defaultValue={record?.isAccessory}
-          />
-        </div>
+        {/*<div>*/}
+        {/*  <label htmlFor="isAccessory">Is Accessory (1 - да, 0 - нет)</label>*/}
+        {/*  <input*/}
+        {/*    type="number"*/}
+        {/*    id="isAccessory"*/}
+        {/*    name="isAccessory"*/}
+        {/*    min="0"*/}
+        {/*    max="1"*/}
+        {/*    defaultValue={record?.isAccessory}*/}
+        {/*  />*/}
+        {/*</div>*/}
 
         <div>
           <label htmlFor="guarantee">Guarantee (гарантия в годах)</label>
-          <input
+          <Input
             type="number"
             id="guarantee"
             name="guarantee"
@@ -134,7 +135,7 @@ export const EditProduct = () => {
 
         <div>
           <label htmlFor="guaranteeContent">Guarantee Description</label>
-          <textarea
+          <Input
             id="guaranteeContent"
             name="guaranteeContent"
             defaultValue={record?.guaranteeContent}
@@ -143,7 +144,7 @@ export const EditProduct = () => {
 
         <div>
           <label htmlFor="rating">Rating</label>
-          <input
+          <Input
             type="number"
             id="rating"
             name="rating"
@@ -156,7 +157,7 @@ export const EditProduct = () => {
 
         <div>
           <label htmlFor="order">Order Priority</label>
-          <input
+          <Input
             type="number"
             id="order"
             name="order"
@@ -166,7 +167,7 @@ export const EditProduct = () => {
 
         <div>
           <label htmlFor="labels">Labels (разделяй запятой)</label>
-          <input
+          <Input
             type="text"
             id="labels"
             name="labels"
@@ -178,7 +179,7 @@ export const EditProduct = () => {
           <label htmlFor="product_attachments">
             Product Attachments (URLs через запятую)
           </label>
-          <input
+          <Input
             type="text"
             id="product_attachments"
             name="product_attachments"
@@ -204,7 +205,7 @@ export const EditProduct = () => {
         </div>
 
         {mutation.isSuccess && <span>Successfully submitted!</span>}
-        <button type="submit"> Submit</button>
+        <Button type="submit"> Submit</Button>
       </form>
     </div>
   );

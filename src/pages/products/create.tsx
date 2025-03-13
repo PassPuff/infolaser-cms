@@ -1,4 +1,6 @@
 import { useForm, useSelect } from "@refinedev/core";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 
 interface ICategory {
 	id: number;
@@ -6,10 +8,7 @@ interface ICategory {
 }
 
 export const CreateProduct = () => {
-	const { onFinish, mutation } = useForm({
-		action: "create",
-		resource: "products",
-	});
+	const { onFinish, mutation } = useForm();
 
 	const { options } = useSelect({
 		resource: "category",
@@ -38,83 +37,83 @@ export const CreateProduct = () => {
 	};
 
 	return (
-		<div>
-			<h1>Create Product</h1>
-			<form onSubmit={onSubmit}>
+		<div className="max-w-xl mx-auto p-8">
+			<h1 className="text-4xl">Create Product</h1>
+			<form onSubmit={onSubmit} className="space-y-4">
 				<div>
-					<label htmlFor="name">Name</label>
-					<input type="text" id="name" name="name" required />
+					<label htmlFor="name" className="block">Name</label>
+					<Input type="text" id="name" name="name" required className="border block w-full" />
 				</div>
 
 				<div>
-					<label htmlFor="slug">Slug</label>
-					<input type="text" id="slug" name="slug" required />
+					<label htmlFor="slug" className="block">Slug</label>
+					<Input type="text" id="slug" name="slug" required className="border block w-full" />
 				</div>
 
 				<div>
-					<label htmlFor="description">Description</label>
-					<textarea id="description" name="description" required />
+					<label htmlFor="description" className="block">Description</label>
+					<Input id="description" name="description" required className="border block w-full" />
 				</div>
 
 				<div>
-					<label htmlFor="orderPrice">Order Price</label>
-					<input type="number" id="orderPrice" name="orderPrice" required />
+					<label htmlFor="orderPrice" className="block">Order Price</label>
+					<Input type="number" id="orderPrice" name="orderPrice" required className="border block w-full" />
 				</div>
 
 				<div>
-					<label htmlFor="stockPrice">Stock Price</label>
-					<input type="number" id="stockPrice" name="stockPrice" required />
+					<label htmlFor="stockPrice" className="block">Stock Price</label>
+					<Input type="number" id="stockPrice" name="stockPrice" required className="border block w-full" />
 				</div>
 
 				<div>
-					<label htmlFor="newPrice">New Price</label>
-					<input type="number" id="newPrice" name="newPrice" required />
+					<label htmlFor="newPrice" className="block">New Price</label>
+					<Input type="number" id="newPrice" name="newPrice" required className="border block w-full" />
 				</div>
 
 				<div>
-					<label htmlFor="inStock">In Stock (1 - да, 0 - нет)</label>
-					<input type="number" id="inStock" name="inStock" min="0" max="1" required />
+					<label htmlFor="inStock" className="block">In Stock (1 - yes, 0 - no)</label>
+					<Input type="number" id="inStock" name="inStock" min="0" max="1" required className="border block w-full" />
 				</div>
 
 				<div>
-					<label htmlFor="isAccessory">Is Accessory (1 - да, 0 - нет)</label>
-					<input type="number" id="isAccessory" name="isAccessory" min="0" max="1" required />
+					<label htmlFor="isAccessory" className="block">Is Accessory (1 - yes, 0 - no)</label>
+					<Input type="number" id="isAccessory" name="isAccessory" min="0" max="1" required className="border block w-full" />
 				</div>
 
 				<div>
-					<label htmlFor="guarantee">Guarantee (гарантия в годах)</label>
-					<input type="number" id="guarantee" name="guarantee" required />
+					<label htmlFor="guarantee" className="block">Guarantee (years)</label>
+					<Input type="number" id="guarantee" name="guarantee" required className="border block w-full" />
 				</div>
 
 				<div>
-					<label htmlFor="guaranteeContent">Guarantee Description</label>
-					<textarea id="guaranteeContent" name="guaranteeContent" />
+					<label htmlFor="guaranteeContent" className="block">Guarantee Description</label>
+					<Input id="guaranteeContent" name="guaranteeContent" className="border block w-full" />
 				</div>
 
 				<div>
-					<label htmlFor="rating">Rating</label>
-					<input type="number" id="rating" name="rating" step="0.1" min="0" max="5" required />
+					<label htmlFor="rating" className="block">Rating</label>
+					<Input type="number" id="rating" name="rating" step="0.1" min="0" max="5" required className="border block w-full" />
 				</div>
 
 				<div>
-					<label htmlFor="order">Order Priority</label>
-					<input type="number" id="order" name="order" required />
+					<label htmlFor="order" className="block">Order Priority</label>
+					<Input type="number" id="order" name="order" required className="border block w-full" />
 				</div>
 
 				<div>
-					<label htmlFor="labels">Labels (разделяй запятой)</label>
-					<input type="text" id="labels" name="labels" />
+					<label htmlFor="labels" className="block">Labels (comma separated)</label>
+					<Input type="text" id="labels" name="labels" className="border block w-full" />
 				</div>
 
 				<div>
-					<label htmlFor="product_attachments">Product Attachments (URLs через запятую)</label>
-					<input type="text" id="product_attachments" name="product_attachments" />
+					<label htmlFor="product_attachments" className="block">Product Attachments (URLs comma separated)</label>
+					<Input type="text" id="product_attachments" name="product_attachments" className="border block w-full" />
 				</div>
 
 				<div>
-					<label htmlFor="categories">Category</label>
-					<select id="categories" name="categories">
-						<option value="">Выбери категорию</option>
+					<label htmlFor="categories" className="block">Category</label>
+					<select id="categories" name="categories" className="border block w-full">
+						<option value="">Select category</option>
 
 						{options.map((option) => (
 							<option key={option.value} value={option.value}>
@@ -122,11 +121,11 @@ export const CreateProduct = () => {
 							</option>
 						))}
 					</select>
-				</div >
+				</div>
 
-				{mutation.isSuccess && <span>Successfully submitted!</span>}
-				<button type="submit" > Submit</button >
-			</form >
-		</div >
+				{mutation.isSuccess && <span className="text-green-600">Successfully submitted!</span>}
+				<Button type="submit" className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Submit</Button>
+			</form>
+		</div>
 	);
 };
