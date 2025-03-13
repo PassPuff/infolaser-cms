@@ -1,7 +1,6 @@
 import type { DataProvider } from "@refinedev/core";
 
 const API_URL = "https://api.infolasers.ru/api";
-// const API_URL = "https://api.fake-rest.refine.dev";
 
 // Обёртка над fetch для добавления заголовка Authorization
 const fetchWithAuth = async (url: string, options: RequestInit = {}) => {
