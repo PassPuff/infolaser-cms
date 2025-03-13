@@ -1,6 +1,6 @@
 import React from "react";
 import { useLogin } from "@refinedev/core";
-import { Button } from "../components/ui/button";
+import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
 export const Login = () => {
