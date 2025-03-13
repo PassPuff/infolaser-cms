@@ -15,12 +15,12 @@ export const Header = () => {
   return (
     <header className="flex items-center justify-between p-4 bg-white shadow-md">
       <h2 className="text-2xl font-bold text-gray-800">
-        Welcome! Infolaser CMS
+        Welcome! to Infolser CMS
       </h2>
       <div className="flex items-center gap-4">
         <Link
           to={listUrl("products")}
-          className="text-blue-600 hover:text-blue-800 font-medium"
+          className="hover:text-red-500"
         >
           Products
         </Link>

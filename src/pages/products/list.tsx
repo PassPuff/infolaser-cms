@@ -59,7 +59,7 @@ export const ListProducts: React.FC = () => {
   return (
     <div>
       <h1 className="text-2xl py-10 text-cyan-800 font-bold">Products LIST</h1>
-      <Button onClick={() => create("products")}>Create Product</Button>
+      <Button className="my-4" onClick={() => create("products")}>Create Product</Button>
       <table className="w-full">
         <thead>
           <tr className="border-2 p-2">
