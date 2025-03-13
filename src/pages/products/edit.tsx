@@ -45,7 +45,9 @@ export const EditProduct = () => {
 
   return (
     <div className="max-w-xl mx-auto p-8">
-      <h1 className="text-4xl">Edit Product</h1>
+      <h1 className="text-4xl">
+        Edit Product <br /> {record?.name ?? ""}
+      </h1>
       <form onSubmit={onSubmit} className="space-y-4">
         <div className="grid grid-cols-2 gap-4">
           <div>
