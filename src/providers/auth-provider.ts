@@ -3,9 +3,11 @@ import { AuthProvider } from "@refinedev/core";
 export const authProvider: AuthProvider = {
   onError: async (error) => {
     if (error?.status === 401) {
+      const customError = new Error("Unauthorized");
+
       return {
-        logout : true,
-        error: { message: "Unauthorized" },
+        logout: true,
+        error: customError,
       };
     }
 

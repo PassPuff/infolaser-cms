@@ -1,7 +1,6 @@
-import { useTable ,useMany, useNavigation } from "@refinedev/core";
+import { useTable, useMany, useNavigation } from "@refinedev/core";
 import { Category, Product } from "../../types/interface";
 import { Button } from "@/components/ui/button";
-
 
 export const ListProducts: React.FC = () => {
   const {
@@ -19,7 +18,7 @@ export const ListProducts: React.FC = () => {
 
   // You can also use methods like show or list to trigger navigation.
   // We're using url methods to provide more semantically correct html.
-  const { show, edit } = useNavigation();
+  const { show, edit, create } = useNavigation();
 
   if (isLoading) return <h1>Loading...</h1>;
 
@@ -53,13 +52,14 @@ export const ListProducts: React.FC = () => {
     ]);
   };
 
-  const findSorterByFieldName = (fieldName: string) => {
-    return sorters.find((sorter) => sorter.field === fieldName);
-  };
+  // const findSorterByFieldName = (fieldName: string) => {
+  //   return sorters.find((sorter) => sorter.field === fieldName);
+  // };
 
   return (
     <div>
       <h1 className="text-2xl py-10 text-cyan-800 font-bold">Products LIST</h1>
+      <Button onClick={() => create("products")}>Create Product</Button>
       <table className="w-full">
         <thead>
           <tr className="border-2 p-2">
@@ -102,7 +102,7 @@ export const ListProducts: React.FC = () => {
           </tr>
         </thead>
         <tbody>
-          {data?.data?.map((product)  => (
+          {data?.data?.map((product) => (
             <tr className="border-2 p-2" key={product.id}>
               <td className="text-center">{product.id}</td>
               <td>{product.name}</td>
@@ -114,21 +114,34 @@ export const ListProducts: React.FC = () => {
               </td>
               <td className="text-right">{product.orderPrice}</td>
               <td className="flex gap-2 px-10">
-                <Button variant="secondary" onClick={() => show("products", product.id)}>Show</Button>
+                <Button
+                  variant="secondary"
+                  onClick={() => show("products", product.id)}
+                >
+                  Show
+                </Button>
 
-                <Button variant="secondary" onClick={() => edit("products", product.id)}>Edit</Button>
+                <Button
+                  variant="secondary"
+                  onClick={() => edit("products", product.id)}
+                >
+                  Edit
+                </Button>
               </td>
             </tr>
           ))}
         </tbody>
       </table>
-      <hr />
+
+      {/* <hr />
       Sorting by field:
       <b>
-        {findSorterByFieldName("price")?.field},  order{" "}
+        {findSorterByFieldName("price")?.field}, order{" "}
         {findSorterByFieldName("price")?.order}
       </b>
       <br />
+
+
       <Button
         onClick={() => {
           setSorters([
@@ -143,7 +156,8 @@ export const ListProducts: React.FC = () => {
         }}
       >
         Toggle Sort
-      </Button>
+      </Button> */}
+
       <div className="flex gap-5 mt-5 items-center justify-center">
         <Button type="button" onClick={onPrevious} disabled={current <= 1}>
           Предыдущая
