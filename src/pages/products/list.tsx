@@ -1,4 +1,4 @@
-import { useTable, useMany, useNavigation } from "@refinedev/core";
+import { useTable, useMany, useNavigation, BaseKey  } from "@refinedev/core";
 import { Category, Product } from "../../types/interface";
 import { Button } from "@/components/ui/button";
 
@@ -116,14 +116,14 @@ export const ListProducts: React.FC = () => {
               <td className="flex gap-2 px-10">
                 <Button
                   variant="secondary"
-                  onClick={() => show("products", product.id)}
+                  onClick={() => show("products", product.id as BaseKey)}
                 >
                   Show
                 </Button>
 
                 <Button
                   variant="secondary"
-                  onClick={() => edit("products", product.id)}
+                  onClick={() => edit("products", product.id as BaseKey)}
                 >
                   Edit
                 </Button>
