@@ -4,17 +4,23 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 
 export const EditProduct = () => {
-  const { onFinish, mutation, query } = useForm();
+  const { onFinish, mutation, query } = useForm({
+    // This will redirect to the show page after the mutation is successful.
+    // Default value is `"list"`.
+    // We can also provide `false` to disable the redirect.
+    redirect: "show",
+  });
 
   const record = query?.data?.data.product as Product;
 
   // Преобразование массива labels в строку
-  const labelsString = record?.labels?.map((label) => label.name).join(", ");
+  // const labelsString = record?.labels?.map((label) => label.name).join(", ");
+
 
   // Преобразование массива attachments в строку URL'ов
-  const attachmentsString = record?.product_attachments
-    ?.map((att) => att.external_url)
-    .join(", ");
+  // const attachmentsString = record?.product_attachments
+  //   ?.map((att) => att.external_url)
+  //   .join(", ");
 
   const { options } = useSelect({
     resource: "category",
@@ -31,14 +37,14 @@ export const EditProduct = () => {
     onFinish({
       ...data,
       inStock: Number(data.inStock),
-      isAccessory: Number(data.isAccessory),
+      // isAccessory: Number(data.isAccessory),
       orderPrice: Number(data.orderPrice),
       stockPrice: Number(data.stockPrice),
       newPrice: Number(data.newPrice),
       guarantee: Number(data.guarantee),
       rating: Number(data.rating),
       order: Number(data.order),
-      labels: data.labels ? data.labels : [],
+      // labels: data.labels ? data.labels : [],
       categories: data.categories ? [data.categories] : [],
     });
   };
@@ -206,31 +212,31 @@ export const EditProduct = () => {
             />
           </div>
 
-          <div>
-            <label htmlFor="labels" className="block">
-              Labels (comma separated)
-            </label>
-            <Input
-              type="text"
-              id="labels"
-              name="labels"
-              defaultValue={labelsString ?? ""}
-              className="border block w-full"
-            />
-          </div>
+          {/*<div>*/}
+          {/*  <label htmlFor="labels" className="block">*/}
+          {/*    Labels (comma separated)*/}
+          {/*  </label>*/}
+          {/*  <Input*/}
+          {/*    type="text"*/}
+          {/*    id="labels"*/}
+          {/*    name="labels"*/}
+          {/*    defaultValue={labelsString ?? ""}*/}
+          {/*    className="border block w-full"*/}
+          {/*  />*/}
+          {/*</div>*/}
 
-          <div>
-            <label htmlFor="product_attachments" className="block">
-              Product Attachments (URLs comma separated)
-            </label>
-            <Input
-              type="text"
-              id="product_attachments"
-              name="product_attachments"
-              defaultValue={attachmentsString ?? ""}
-              className="border block w-full"
-            />
-          </div>
+          {/*<div>*/}
+          {/*  <label htmlFor="product_attachments" className="block">*/}
+          {/*    Product Attachments (URLs comma separated)*/}
+          {/*  </label>*/}
+          {/*  <Input*/}
+          {/*    type="text"*/}
+          {/*    id="product_attachments"*/}
+          {/*    name="product_attachments"*/}
+          {/*    defaultValue={attachmentsString ?? ""}*/}
+          {/*    className="border block w-full"*/}
+          {/*  />*/}
+          {/*</div>*/}
 
           <div>
             <label htmlFor="categories" className="block">

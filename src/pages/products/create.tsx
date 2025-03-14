@@ -3,7 +3,9 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 
 export const CreateProduct = () => {
-  const { onFinish, mutation } = useForm();
+  const { onFinish, mutation } = useForm({
+    redirect: "edit",
+  });
 
   const { options } = useSelect({
     resource: "category",
@@ -27,7 +29,7 @@ export const CreateProduct = () => {
       guarantee: Number(data.guarantee),
       rating: Number(data.rating),
       order: Number(data.order),
-      labels: data.labels ? data.labels.split(",") : [],
+      labels: data.labels ? data.labels : [],
       categories: data.categories ? [data.categories] : [],
     });
   };

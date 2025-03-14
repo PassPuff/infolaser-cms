@@ -33,7 +33,7 @@ export const authProvider: AuthProvider = {
   logout: async () => {
     localStorage.removeItem("refine-auth");
     // We're returning success: true to indicate that the logout operation was successful.
-    return { success: true };
+    return { success: true,  redirectTo: "/login"  };
   },
 
   login: async ({ email, password }) => {
