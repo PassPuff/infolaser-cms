@@ -39,7 +39,7 @@ export const ListProducts: React.FC = () => {
     {
       field: "categories",
       headerName: "Categories",
-      minWidth: 250,
+      minWidth: 200,
 
       renderCell: function render({ row }) {
         return (
@@ -77,7 +77,6 @@ export const ListProducts: React.FC = () => {
 
   return (
     <div>
-      <h1>Products</h1>
       <CreateButton />
       <RefreshButton />
       <DataGrid {...dataGridProps} columns={columns} />
