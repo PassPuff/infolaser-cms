@@ -2,6 +2,7 @@ import React from "react";
 import { useLogin } from "@refinedev/core";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Loader } from "@/components/ui/loader";
 
 export const Login = () => {
   const { mutate, isLoading } = useLogin();
@@ -38,10 +39,13 @@ export const Login = () => {
           defaultValue="123456"
         />
 
-        {isLoading && <span>loading...</span>}
-        <Button className="mt-5" type="submit" disabled={isLoading}>
-          Submit
-        </Button>
+        {isLoading ? (
+          <Loader />
+        ) : (
+          <Button className="mt-5" type="submit" disabled={isLoading}>
+            Submit
+          </Button>
+        )}
       </form>
     </div>
   );

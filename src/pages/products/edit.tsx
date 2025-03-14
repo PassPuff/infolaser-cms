@@ -1,275 +1,208 @@
-import { useForm, useSelect } from "@refinedev/core";
+import { useForm } from "@refinedev/react-hook-form";
+import { useAutocomplete } from "@refinedev/mui";
+import { Box, TextField, Autocomplete } from "@mui/material";
+import { Controller } from "react-hook-form";
 import { Product } from "../../types/interface";
-import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { Loader } from "@/components/ui/loader";
 
 export const EditProduct = () => {
-  const { onFinish, mutation, query } = useForm({
-    // This will redirect to the show page after the mutation is successful.
-    // Default value is `"list"`.
-    // We can also provide `false` to disable the redirect.
-    redirect: "show",
-  });
+  const {
+    register,
+    control,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
 
-  const record = query?.data?.data.product as Product;
+  const {
+    refineCore: { onFinish, queryResult },
+  } = useForm();
 
-  // Преобразование массива labels в строку
-  // const labelsString = record?.labels?.map((label) => label.name).join(", ");
+  const record = queryResult?.data?.data.product as Product;
 
-
-  // Преобразование массива attachments в строку URL'ов
-  // const attachmentsString = record?.product_attachments
-  //   ?.map((att) => att.external_url)
-  //   .join(", ");
-
-  const { options } = useSelect({
+  const { autocompleteProps } = useAutocomplete({
     resource: "category",
-    optionLabel: "name",
-    optionValue: "id",
+    defaultValue: record?.categories?.map((cat) => cat.id) ?? [],
   });
 
-  const onSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    const data = Object.fromEntries(
-      new FormData(event.currentTarget).entries(),
-    );
-
-    onFinish({
+  // Обработчик отправки формы
+  const onSubmit = async (data: any) => {
+    // Преобразуем категории в массив ID
+    const transformedData = {
       ...data,
-      inStock: Number(data.inStock),
-      // isAccessory: Number(data.isAccessory),
-      orderPrice: Number(data.orderPrice),
-      stockPrice: Number(data.stockPrice),
-      newPrice: Number(data.newPrice),
-      guarantee: Number(data.guarantee),
-      rating: Number(data.rating),
-      order: Number(data.order),
-      // labels: data.labels ? data.labels : [],
-      categories: data.categories ? [data.categories] : [],
-    });
+      categories: data.categories?.map((cat: any) => cat.id) ?? [],
+    };
+
+    // Если slug не изменился, удаляем его из данных
+    if (transformedData.slug === record?.slug) {
+      const { slug, ...dataWithoutSlug } = transformedData;
+      return onFinish(dataWithoutSlug);
+    }
+    return onFinish(transformedData);
   };
 
+  if (queryResult?.isLoading) return <Loader />;
+
   return (
-    <div className="max-w-xl mx-auto p-8">
-      <h1 className="text-4xl">
-        Edit Product <br /> {record?.name ?? ""}
-      </h1>
-      <form onSubmit={onSubmit} className="space-y-4">
-        <div className="grid grid-cols-2 gap-4">
-          <div>
-            <label htmlFor="name" className="block">
-              Name
-            </label>
-            <Input
-              type="text"
-              id="name"
-              name="name"
-              required
-              defaultValue={record?.name ?? ""}
-              className="border block w-full"
+    <div className="max-w-3xl mx-auto p-8">
+      <h1 className="text-4xl mb-8">Edit Product: {record?.name ?? ""}</h1>
+
+      <Box
+        component="form"
+        className="grid gap-8"
+        onSubmit={handleSubmit(onSubmit)}
+      >
+        <TextField
+          {...register("name", { required: "This field is required" })}
+          label="Name"
+          error={!!errors.name}
+          defaultValue={record?.name ?? ""}
+          helperText={errors.name?.message as string}
+        />
+
+        <TextField
+          {...register("slug", { required: "This field is required" })}
+          label="Slug"
+          error={!!errors.slug}
+          defaultValue={record?.slug ?? ""}
+          helperText={errors.slug?.message as string}
+        />
+
+        <TextField
+          {...register("description")}
+          multiline
+          rows={4}
+          label="Description"
+          error={!!errors.description}
+          defaultValue={record?.description ?? ""}
+          helperText={errors.description?.message as string}
+        />
+
+        <TextField
+          {...register("orderPrice", {
+            required: "This field is required",
+            valueAsNumber: true,
+          })}
+          type="number"
+          label="Order Price"
+          error={!!errors.orderPrice}
+          defaultValue={record?.orderPrice ?? ""}
+          helperText={errors.orderPrice?.message as string}
+        />
+
+        <TextField
+          {...register("stockPrice", {
+            required: "This field is required",
+            valueAsNumber: true,
+          })}
+          type="number"
+          label="Stock Price"
+          error={!!errors.stockPrice}
+          defaultValue={record?.stockPrice ?? ""}
+          helperText={errors.stockPrice?.message as string}
+        />
+
+        <TextField
+          {...register("newPrice", { valueAsNumber: true })}
+          type="number"
+          label="New Price"
+          error={!!errors.newPrice}
+          defaultValue={record?.newPrice ?? ""}
+          helperText={errors.newPrice?.message as string}
+        />
+
+        <TextField
+          {...register("inStock", {
+            required: "This field is required",
+            valueAsNumber: true,
+            min: { value: 0, message: "Must be 0 or 1" },
+            max: { value: 1, message: "Must be 0 or 1" },
+          })}
+          type="number"
+          label="In Stock (0 or 1)"
+          inputProps={{ min: 0, max: 1 }}
+          error={!!errors.inStock}
+          defaultValue={record?.inStock ?? ""}
+          helperText={errors.inStock?.message as string}
+        />
+
+        <TextField
+          {...register("rating", {
+            valueAsNumber: true,
+            min: { value: 0, message: "Minimum rating is 0" },
+            max: { value: 5, message: "Maximum rating is 5" },
+          })}
+          type="number"
+          label="Rating"
+          inputProps={{ step: 0.1, min: 0, max: 5 }}
+          error={!!errors.rating}
+          defaultValue={record?.rating ?? ""}
+          helperText={errors.rating?.message as string}
+        />
+
+        <TextField
+          {...register("guarantee", { valueAsNumber: true })}
+          type="number"
+          label="Guarantee (years)"
+          error={!!errors.guarantee}
+          defaultValue={record?.guarantee ?? ""}
+          helperText={errors.guarantee?.message as string}
+        />
+
+        <TextField
+          {...register("guaranteeContent")}
+          multiline
+          rows={2}
+          label="Guarantee Content"
+          error={!!errors.guaranteeContent}
+          defaultValue={record?.guaranteeContent ?? ""}
+          helperText={errors.guaranteeContent?.message as string}
+        />
+
+        <TextField
+          {...register("order", {
+            // required: "This field is required",
+            valueAsNumber: true,
+          })}
+          type="number"
+          label="Order Priority"
+          error={!!errors.order}
+          defaultValue={record?.order ?? ""}
+          helperText={errors.order?.message as string}
+        />
+
+        <Controller
+          control={control}
+          name="categories"
+          defaultValue={record?.categories ?? []}
+          render={({ field }) => (
+            <Autocomplete
+              {...autocompleteProps}
+              {...field}
+              multiple
+              onChange={(_, value) => field.onChange(value)}
+              getOptionLabel={(item) => item?.name ?? ""}
+              isOptionEqualToValue={(option, value) => option?.id === value?.id}
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  label="Categories"
+                  variant="outlined"
+                  error={!!errors.categories}
+                  helperText={errors.categories?.message as string}
+                />
+              )}
             />
-          </div>
+          )}
+        />
 
-          <div>
-            <label htmlFor="slug" className="block">
-              Slug
-            </label>
-            <Input
-              type="text"
-              id="slug"
-              name="slug"
-              required
-              defaultValue={record?.slug ?? ""}
-              className="border block w-full"
-            />
-          </div>
-
-          <div>
-            <label htmlFor="description" className="block">
-              Description
-            </label>
-            <Input
-              id="description"
-              name="description"
-              required
-              defaultValue={record?.description ?? ""}
-              className="border block w-full"
-            />
-          </div>
-
-          <div>
-            <label htmlFor="orderPrice" className="block">
-              Order Price
-            </label>
-            <Input
-              type="number"
-              id="orderPrice"
-              name="orderPrice"
-              required
-              defaultValue={record?.orderPrice ?? ""}
-              className="border block w-full"
-            />
-          </div>
-
-          <div>
-            <label htmlFor="stockPrice" className="block">
-              Stock Price
-            </label>
-            <Input
-              type="number"
-              id="stockPrice"
-              name="stockPrice"
-              required
-              defaultValue={record?.stockPrice ?? ""}
-              className="border block w-full"
-            />
-          </div>
-
-          <div>
-            <label htmlFor="newPrice" className="block">
-              New Price
-            </label>
-            <Input
-              type="number"
-              id="newPrice"
-              name="newPrice"
-              required
-              defaultValue={record?.newPrice ?? ""}
-              className="border block w-full"
-            />
-          </div>
-
-          <div>
-            <label htmlFor="inStock" className="block">
-              In Stock (1 - yes, 0 - no)
-            </label>
-            <Input
-              type="number"
-              id="inStock"
-              name="inStock"
-              min="0"
-              max="1"
-              required
-              defaultValue={record?.inStock ?? ""}
-              className="border block w-full"
-            />
-          </div>
-
-          <div>
-            <label htmlFor="guarantee" className="block">
-              Guarantee (years)
-            </label>
-            <Input
-              type="number"
-              id="guarantee"
-              name="guarantee"
-              required
-              defaultValue={record?.guarantee ?? ""}
-              className="border block w-full"
-            />
-          </div>
-
-          <div>
-            <label htmlFor="guaranteeContent" className="block">
-              Guarantee Description
-            </label>
-            <Input
-              id="guaranteeContent"
-              name="guaranteeContent"
-              defaultValue={record?.guaranteeContent ?? ""}
-              className="border block w-full"
-            />
-          </div>
-
-          <div>
-            <label htmlFor="rating" className="block">
-              Rating
-            </label>
-            <Input
-              type="number"
-              id="rating"
-              name="rating"
-              step="0.1"
-              min="0"
-              max="5"
-              required
-              defaultValue={record?.rating ?? ""}
-              className="border block w-full"
-            />
-          </div>
-
-          <div>
-            <label htmlFor="order" className="block">
-              Order Priority
-            </label>
-            <Input
-              type="number"
-              id="order"
-              name="order"
-              required
-              defaultValue={record?.order ?? ""}
-              className="border block w-full"
-            />
-          </div>
-
-          {/*<div>*/}
-          {/*  <label htmlFor="labels" className="block">*/}
-          {/*    Labels (comma separated)*/}
-          {/*  </label>*/}
-          {/*  <Input*/}
-          {/*    type="text"*/}
-          {/*    id="labels"*/}
-          {/*    name="labels"*/}
-          {/*    defaultValue={labelsString ?? ""}*/}
-          {/*    className="border block w-full"*/}
-          {/*  />*/}
-          {/*</div>*/}
-
-          {/*<div>*/}
-          {/*  <label htmlFor="product_attachments" className="block">*/}
-          {/*    Product Attachments (URLs comma separated)*/}
-          {/*  </label>*/}
-          {/*  <Input*/}
-          {/*    type="text"*/}
-          {/*    id="product_attachments"*/}
-          {/*    name="product_attachments"*/}
-          {/*    defaultValue={attachmentsString ?? ""}*/}
-          {/*    className="border block w-full"*/}
-          {/*  />*/}
-          {/*</div>*/}
-
-          <div>
-            <label htmlFor="categories" className="block">
-              Category
-            </label>
-            <select
-              id="categories"
-              name="categories"
-              defaultValue={
-                record?.categories?.length > 0 ? record.categories[0].id : ""
-              }
-              className="border block w-full"
-            >
-              <option value="">Select category</option>
-              {options.map((option) => (
-                <option key={option.value} value={option.value}>
-                  {option.label}
-                </option>
-              ))}
-            </select>
-          </div>
-        </div>
-
-        {mutation.isSuccess && (
-          <span className="text-green-600">Successfully submitted!</span>
-        )}
         <Button
           type="submit"
           className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
         >
-          Submit
+          Save
         </Button>
-      </form>
+      </Box>
     </div>
   );
 };
