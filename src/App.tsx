@@ -12,10 +12,15 @@ import { EditProduct } from "./pages/products/edit";
 
 import { Login } from "./pages/login";
 import { Header } from "./components/header";
+import { CssBaseline, GlobalStyles, ThemeProvider } from "@mui/material";
+import { RefineThemes, ThemedLayoutV2, ThemedTitleV2 } from "@refinedev/mui";
 
 function App(): JSX.Element {
   return (
     <BrowserRouter>
+      <ThemeProvider theme={RefineThemes.Green}>
+        <CssBaseline />
+        <GlobalStyles styles={{ html: { WebkitFontSmoothing: "auto" } }} />
       <Refine
         dataProvider={dataProvider}
         authProvider={authProvider}
@@ -27,7 +32,7 @@ function App(): JSX.Element {
             create: "/products/create",
             edit: "/products/:id/edit",
             show: "/products/:id",
-            meta: { label: "Products" },
+            meta: { label: "Продукты" },
           }
         ]}
       >
@@ -39,8 +44,13 @@ function App(): JSX.Element {
               // Мы опускаем реквизит `fallback`, чтобы перенаправить пользователей на страницу входа, если они не прошли аутентификацию.
               // Если пользователь аутентифицирован, мы отобразим компонент `<Header />` и компонент `<Outlet />` для отображения внутренних маршрутов.
               <Authenticated key="authenticated-routes" redirectOnFail="/login">
-                <Header />
-                <Outlet />
+                <ThemedLayoutV2
+                  Title={(props) => (
+                    <ThemedTitleV2 {...props} text="Infolser CMS"  />
+                  )}
+                >
+                  <Outlet />
+                </ThemedLayoutV2>
               </Authenticated>
             }>
             <Route index element={<NavigateToResource resource="/products" />} />
@@ -49,6 +59,7 @@ function App(): JSX.Element {
               <Route path=":id" element={<ShowProduct />} />
               <Route path=":id/edit" element={<EditProduct />} />
               <Route path="create" element={<CreateProduct />} />
+
             </Route>
           </Route>
 
@@ -67,6 +78,7 @@ function App(): JSX.Element {
 
         </Routes>
       </Refine>
+      </ThemeProvider>
     </BrowserRouter>
   );
 }
