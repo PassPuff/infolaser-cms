@@ -13,7 +13,7 @@ export const Login = () => {
     const data = Object.fromEntries(
       new FormData(event.currentTarget).entries(),
     );
-    // Calling mutate to submit with the data we've collected from the form.
+    // Calling mutate to submit with the data we've collected from the form.//
     mutate(data);
   };
 
