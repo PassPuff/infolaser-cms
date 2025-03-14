@@ -2,6 +2,7 @@ import React from "react";
 import { useLogin } from "@refinedev/core";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Loader } from "@/components/ui/loader";
 
 export const Login = () => {
   const { mutate, isLoading } = useLogin();
@@ -12,7 +13,7 @@ export const Login = () => {
     const data = Object.fromEntries(
       new FormData(event.currentTarget).entries(),
     );
-    // Calling mutate to submit with the data we've collected from the form.
+    // Calling mutate to submit with the data we've collected from the form.//
     mutate(data);
   };
 
@@ -38,10 +39,13 @@ export const Login = () => {
           defaultValue="123456"
         />
 
-        {isLoading && <span>loading...</span>}
-        <Button className="mt-5" type="submit" disabled={isLoading}>
-          Submit
-        </Button>
+        {isLoading ? (
+          <Loader />
+        ) : (
+          <Button className="mt-5" type="submit" disabled={isLoading}>
+            Submit
+          </Button>
+        )}
       </form>
     </div>
   );

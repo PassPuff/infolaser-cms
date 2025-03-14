@@ -1,258 +1,167 @@
-import { useForm, useSelect } from "@refinedev/core";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
+import { useForm } from "@refinedev/react-hook-form";
+import { useAutocomplete, SaveButton } from "@refinedev/mui";
+
+import Box from "@mui/material/Box";
+import TextField from "@mui/material/TextField";
+import Autocomplete from "@mui/material/Autocomplete";
+
+import { Controller } from "react-hook-form";
 
 export const CreateProduct = () => {
-  const { onFinish, mutation } = useForm({
-    redirect: "edit",
-  });
+  const {
+    register,
+    control,
+    saveButtonProps,
+    formState: { errors },
+  } = useForm();
 
-  const { options } = useSelect({
+  const { autocompleteProps } = useAutocomplete({
     resource: "category",
-    optionLabel: "name", // Указываем, какое поле использовать как label
-    optionValue: "id", // Указываем, какое поле использовать как value
   });
-
-  const onSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    const data = Object.fromEntries(
-      new FormData(event.currentTarget).entries(),
-    );
-
-    onFinish({
-      ...data,
-      inStock: Number(data.inStock),
-      isAccessory: Number(data.isAccessory),
-      orderPrice: Number(data.orderPrice),
-      stockPrice: Number(data.stockPrice),
-      newPrice: Number(data.newPrice),
-      guarantee: Number(data.guarantee),
-      rating: Number(data.rating),
-      order: Number(data.order),
-      labels: data.labels ? data.labels : [],
-      categories: data.categories ? [data.categories] : [],
-    });
-  };
 
   return (
-    <div className="max-w-xl mx-auto p-8">
+    <Box
+      component="form"
+      sx={{ display: "flex", flexDirection: "column", gap: "12px" }}
+    >
       <h1 className="text-4xl">Create Product</h1>
-      <form onSubmit={onSubmit} className="space-y-4">
-        <div className="grid grid-cols-2 gap-4">
-          <div>
-            <label htmlFor="name" className="block">
-              Name
-            </label>
-            <Input
-              type="text"
-              id="name"
-              name="name"
-              required
-              className="border block w-full"
-            />
-          </div>
 
-          <div>
-            <label htmlFor="slug" className="block">
-              Slug
-            </label>
-            <Input
-              type="text"
-              id="slug"
-              name="slug"
-              required
-              className="border block w-full"
-            />
-          </div>
+      <TextField
+        {...register("name")}
+        label="Name"
+        error={!!errors.name}
+        helperText={errors.name?.message as string}
+      />
 
-          <div>
-            <label htmlFor="description" className="block">
-              Description
-            </label>
-            <Input
-              id="description"
-              name="description"
-              required
-              className="border block w-full"
-            />
-          </div>
+      <TextField
+        {...register("slug")}
+        label="Slug"
+        error={!!errors.slug}
+        helperText={errors.slug?.message as string}
+      />
 
-          <div>
-            <label htmlFor="orderPrice" className="block">
-              Order Price
-            </label>
-            <Input
-              type="number"
-              id="orderPrice"
-              name="orderPrice"
-              required
-              className="border block w-full"
-            />
-          </div>
+      <TextField
+        {...register("description")}
+        multiline
+        rows={4}
+        label="Description"
+        error={!!errors.description}
+        helperText={errors.description?.message as string}
+      />
 
-          <div>
-            <label htmlFor="stockPrice" className="block">
-              Stock Price
-            </label>
-            <Input
-              type="number"
-              id="stockPrice"
-              name="stockPrice"
-              required
-              className="border block w-full"
-            />
-          </div>
+      <TextField
+        {...register("orderPrice")}
+        label="Order Price"
+        type="number"
+        error={!!errors.orderPrice}
+        helperText={errors.orderPrice?.message as string}
+      />
 
-          <div>
-            <label htmlFor="newPrice" className="block">
-              New Price
-            </label>
-            <Input
-              type="number"
-              id="newPrice"
-              name="newPrice"
-              required
-              className="border block w-full"
-            />
-          </div>
+      <TextField
+        {...register("stockPrice")}
+        label="Stock Price"
+        type="number"
+        error={!!errors.stockPrice}
+        helperText={errors.stockPrice?.message as string}
+      />
 
-          <div>
-            <label htmlFor="inStock" className="block">
-              In Stock (1 - yes, 0 - no)
-            </label>
-            <Input
-              type="number"
-              id="inStock"
-              name="inStock"
-              min="0"
-              max="1"
-              required
-              className="border block w-full"
-            />
-          </div>
+      <TextField
+        {...register("newPrice")}
+        label="New Price"
+        type="number"
+        error={!!errors.newPrice}
+        helperText={errors.newPrice?.message as string}
+      />
 
-          <div>
-            <label htmlFor="isAccessory" className="block">
-              Is Accessory (1 - yes, 0 - no)
-            </label>
-            <Input
-              type="number"
-              id="isAccessory"
-              name="isAccessory"
-              min="0"
-              max="1"
-              required
-              className="border block w-full"
-            />
-          </div>
+      <TextField
+        {...register("inStock")}
+        label="In Stock (1 - yes, 0 - no)"
+        type="number"
+        inputProps={{ min: 0, max: 1 }}
+        error={!!errors.inStock}
+        helperText={errors.inStock?.message as string}
+      />
 
-          <div>
-            <label htmlFor="guarantee" className="block">
-              Guarantee (years)
-            </label>
-            <Input
-              type="number"
-              id="guarantee"
-              name="guarantee"
-              required
-              className="border block w-full"
-            />
-          </div>
+      <TextField
+        {...register("isAccessory")}
+        label="Is Accessory (1 - yes, 0 - no)"
+        type="number"
+        inputProps={{ min: 0, max: 1 }}
+        error={!!errors.isAccessory}
+        helperText={errors.isAccessory?.message as string}
+      />
 
-          <div>
-            <label htmlFor="guaranteeContent" className="block">
-              Guarantee Description
-            </label>
-            <Input
-              id="guaranteeContent"
-              name="guaranteeContent"
-              className="border block w-full"
-            />
-          </div>
+      <TextField
+        {...register("guarantee")}
+        label="Guarantee (years)"
+        type="number"
+        error={!!errors.guarantee}
+        helperText={errors.guarantee?.message as string}
+      />
 
-          <div>
-            <label htmlFor="rating" className="block">
-              Rating
-            </label>
-            <Input
-              type="number"
-              id="rating"
-              name="rating"
-              step="0.1"
-              min="0"
-              max="5"
-              required
-              className="border block w-full"
-            />
-          </div>
+      <TextField
+        {...register("guaranteeContent")}
+        label="Guarantee Description"
+        error={!!errors.guaranteeContent}
+        helperText={errors.guaranteeContent?.message as string}
+      />
 
-          <div>
-            <label htmlFor="order" className="block">
-              Order Priority
-            </label>
-            <Input
-              type="number"
-              id="order"
-              name="order"
-              required
-              className="border block w-full"
-            />
-          </div>
+      <TextField
+        {...register("rating")}
+        label="Rating"
+        type="number"
+        inputProps={{ step: 0.1, min: 0, max: 5 }}
+        error={!!errors.rating}
+        helperText={errors.rating?.message as string}
+      />
 
-          <div>
-            <label htmlFor="labels" className="block">
-              Labels (comma separated)
-            </label>
-            <Input
-              type="text"
-              id="labels"
-              name="labels"
-              className="border block w-full"
-            />
-          </div>
+      <TextField
+        {...register("order")}
+        label="Order Priority"
+        type="number"
+        error={!!errors.order}
+        helperText={errors.order?.message as string}
+      />
 
-          <div>
-            <label htmlFor="product_attachments" className="block">
-              Product Attachments (URLs comma separated)
-            </label>
-            <Input
-              type="text"
-              id="product_attachments"
-              name="product_attachments"
-              className="border block w-full"
-            />
-          </div>
+      <TextField
+        {...register("labels")}
+        label="Labels (comma separated)"
+        error={!!errors.labels}
+        helperText={errors.labels?.message as string}
+      />
 
-          <div>
-            <label htmlFor="categories" className="block">
-              Category
-            </label>
-            <select
-              id="categories"
-              name="categories"
-              className="border block w-full"
-            >
-              <option value="">Select category</option>
+      <TextField
+        {...register("product_attachments")}
+        label="Product Attachments (URLs comma separated)"
+        error={!!errors.product_attachments}
+        helperText={errors.product_attachments?.message as string}
+      />
 
-              {options.map((option) => (
-                <option key={option.value} value={option.value}>
-                  {option.label}
-                </option>
-              ))}
-            </select>
-          </div>
-        </div>
-
-        {mutation.isSuccess && (
-          <span className="text-green-600">Successfully submitted!</span>
+      <Controller
+        control={control}
+        name="categories"
+        render={({ field }) => (
+          <Autocomplete
+            {...autocompleteProps}
+            {...field}
+            multiple
+            onChange={(_, value) => field.onChange(value)}
+            getOptionLabel={(item) => item?.name ?? ""}
+            isOptionEqualToValue={(option, value) => option?.id === value?.id}
+            renderInput={(params) => (
+              <TextField
+                {...params}
+                label="Categories"
+                variant="outlined"
+                error={!!errors.categories}
+                helperText={errors.categories?.message as string}
+              />
+            )}
+          />
         )}
-        <Button
-          type="submit"
-          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-        >
-          Submit
-        </Button>
-      </form>
-    </div>
+      />
+
+      <SaveButton {...saveButtonProps} />
+    </Box>
   );
 };
